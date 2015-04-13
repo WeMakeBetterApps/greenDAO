@@ -17,6 +17,7 @@
  */
 package de.greenrobot.daogenerator;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** To-many relationship from a source entity to many target entitites. */
@@ -30,7 +31,10 @@ public class ToMany {
     private final Property[] targetProperties;
     private final PropertyOrderList propertyOrderList;
 
-    public ToMany(Schema schema, Entity sourceEntity, Property[] sourceProperties, Entity targetEntity,
+    private final List<Annotation> fieldAnnotations;
+
+
+  public ToMany(Schema schema, Entity sourceEntity, Property[] sourceProperties, Entity targetEntity,
             Property[] targetProperties) {
         this.schema = schema;
         this.sourceEntity = sourceEntity;
@@ -38,6 +42,8 @@ public class ToMany {
         this.sourceProperties = sourceProperties;
         this.targetProperties = targetProperties;
         propertyOrderList = new PropertyOrderList();
+
+        fieldAnnotations = new ArrayList<Annotation>();
     }
 
     public Entity getSourceEntity() {
@@ -138,6 +144,15 @@ public class ToMany {
         String sourceName = sourceEntity != null ? sourceEntity.getClassName() : null;
         String targetName = targetEntity != null ? targetEntity.getClassName() : null;
         return "ToMany '" + name + "' from " + sourceName + " to " + targetName;
+    }
+
+    public ToMany addFieldAnnotation(Annotation annotation) {
+      fieldAnnotations.add(annotation);
+      return this;
+    }
+
+    public List<Annotation> getFieldAnnotations() {
+      return fieldAnnotations;
     }
 
 }

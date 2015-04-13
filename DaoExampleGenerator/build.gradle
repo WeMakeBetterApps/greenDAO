@@ -1,5 +1,4 @@
 apply plugin: 'java'
-apply plugin: 'maven'
 apply plugin:'application'
 
 group = 'de.greenrobot'
@@ -13,7 +12,7 @@ repositories {
 }
 
 dependencies {
-    compile('de.greenrobot:greendao-generator:1.3.1-SNAPSHOT')
+    compile('de.greenrobot:DaoGenerator:1.3.1')
 }
 
 sourceSets {

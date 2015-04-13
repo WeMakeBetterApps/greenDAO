@@ -15,6 +15,7 @@
  */
 package de.greenrobot.daogenerator.gentest;
 
+import de.greenrobot.daogenerator.Annotation;
 import de.greenrobot.daogenerator.DaoGenerator;
 import de.greenrobot.daogenerator.Entity;
 import de.greenrobot.daogenerator.Property;
@@ -23,9 +24,9 @@ import de.greenrobot.daogenerator.ToMany;
 
 /**
  * Generates entities and DAOs for the example project DaoExample.
- * 
+ *
  * Run it as a Java application (not Android).
- * 
+ *
  * @author Markus
  */
 public class ExampleDaoGenerator {
@@ -42,7 +43,7 @@ public class ExampleDaoGenerator {
     private static void addNote(Schema schema) {
         Entity note = schema.addEntity("Note");
         note.addIdProperty();
-        note.addStringProperty("text").notNull();
+        note.addStringProperty("text").addFieldAnnotation(new Annotation("com.google.gson.annotations.SerializedName", "\"test\"")).notNull();
         note.addStringProperty("comment");
         note.addDateProperty("date");
     }
@@ -62,6 +63,7 @@ public class ExampleDaoGenerator {
         ToMany customerToOrders = customer.addToMany(order, customerId);
         customerToOrders.setName("orders");
         customerToOrders.orderAsc(orderDate);
+        customerToOrders.addFieldAnnotation(new Annotation("com.google.gson.annotations.SerializedName", "\"test\""));
     }
 
 }

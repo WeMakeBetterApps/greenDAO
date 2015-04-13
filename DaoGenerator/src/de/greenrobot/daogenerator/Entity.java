@@ -17,9 +17,14 @@
  */
 package de.greenrobot.daogenerator;
 
-import de.greenrobot.daogenerator.Property.PropertyBuilder;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
-import java.util.*;
+import de.greenrobot.daogenerator.Property.PropertyBuilder;
 
 /**
  * Model class for an entity: a Java data object mapped to a data base table. A new entity is added to a {@link Schema}
@@ -49,6 +54,10 @@ public class Entity {
     private final Collection<String> additionalImportsDao;
     private final List<String> interfacesToImplement;
     private final List<ContentProvider> contentProviders;
+    //annotation lists
+    private final List<Annotation> classAnnotations;
+    private final List<Annotation> emptyConstructorAnnotations;
+    private final List<Annotation> fullConstructorAnnotations;
 
     private String tableName;
     private String classNameDao;
@@ -83,6 +92,9 @@ public class Entity {
         additionalImportsDao = new TreeSet<String>();
         interfacesToImplement = new ArrayList<String>();
         contentProviders = new ArrayList<ContentProvider>();
+        classAnnotations = new ArrayList<Annotation>();
+        emptyConstructorAnnotations = new ArrayList<Annotation>();
+        fullConstructorAnnotations = new ArrayList<Annotation>();
         constructors = true;
     }
 
@@ -383,6 +395,33 @@ public class Entity {
         return incomingToManyRelations;
     }
 
+    public List<Annotation> getClassAnnotations() {
+    		return classAnnotations;
+    }
+
+    public List<Annotation> getEmptyConstructorAnnotations() {
+        return emptyConstructorAnnotations;
+    }
+
+    public List<Annotation> getFullConstructorAnnotations() {
+        return fullConstructorAnnotations;
+    }
+
+    public Entity addClassAnnotation(Annotation annotation) {
+        classAnnotations.add(annotation);
+        return this;
+    }
+
+    public Entity addEmptyConstructorAnnotation(Annotation annotation) {
+        emptyConstructorAnnotations.add(annotation);
+        return this;
+    }
+
+    public Entity addFullConstructorAnnotation(Annotation annotation) {
+        fullConstructorAnnotations.add(annotation);
+        return this;
+    }
+
     /**
      * Entities with relations are active, but this method allows to make the entities active even if it does not have
      * relations.
@@ -594,6 +633,24 @@ public class Entity {
         for (ToMany toMany : toManyRelations) {
             Entity targetEntity = toMany.getTargetEntity();
             checkAdditionalImportsEntityTargetEntity(targetEntity);
+        }
+
+        addAnnotationImports(classAnnotations);
+        addAnnotationImports(emptyConstructorAnnotations);
+        addAnnotationImports(fullConstructorAnnotations);
+
+        for (Property property : properties) {
+            addAnnotationImports(property.getGetterAnnotations());
+            addAnnotationImports(property.getSetterAnnotations());
+            addAnnotationImports(property.getFieldAnnotations());
+        }
+    }
+
+    private void addAnnotationImports(List<Annotation> annotations) {
+        for (Annotation annotation : annotations) {
+            if (annotation.getPackage() != null) {
+                additionalImportsEntity.add(annotation.getPackage() + "." + annotation.getName());
+            }
         }
     }
 
