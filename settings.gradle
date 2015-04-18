@@ -1,2 +1,11 @@
-include 'DaoCore', 'DaoGenerator', 'DaoExampleGenerator'
-include 'DaoTest' // Travis needs some Android setup for this
+include ':DaoTest'
+rootProject.name = 'greenDAO'
+
+include 'DaoGenerator'
+include 'DaoCore'
+include 'DaoExampleGenerator'
+
+include 'DaoExample'
+
+include 'DaoExample'
+
