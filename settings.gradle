@@ -1,11 +1,7 @@
-include ':DaoTest'
 rootProject.name = 'greenDAO'
 
-include 'DaoGenerator'
 include 'DaoCore'
+include 'DaoGenerator'
+include 'DaoExample'
 include 'DaoExampleGenerator'
-
-include 'DaoExample'
-
-include 'DaoExample'
-
+include 'DaoTest'
